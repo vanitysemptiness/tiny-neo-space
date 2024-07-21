@@ -1,4 +1,5 @@
 use macroquad::prelude::*;
+use macroquad::window::Conf;
 
 mod hud;
 use hud::Hud;
@@ -113,5 +114,13 @@ fn segment_distance(start: Vec2, end: Vec2, point: Vec2) -> f32 {
     } else {
         let projection = start + line_vec * (project / line_len);
         (point - projection).length()
+    }
+}
+
+fn window_conf() -> Conf {
+    Conf {
+        window_title: "Uncapped FPS".to_owned(),
+        vsync: false,
+        ..Default::default()
     }
 }

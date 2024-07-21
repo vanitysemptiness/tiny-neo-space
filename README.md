@@ -1,3 +1,7 @@
+# tiny-neo-space
+
+even smaller and easier to user (and develop with) neo space canvas app in Rust.
+
 Build Run (Run will also build)
 ---
 ```bash
