@@ -13,4 +13,4 @@ pub fn perform_action_based_on_application_state(state: &mut ApplicationState, m
         Mode::Draw => perform_drawing(state, mouse_pos),
         Mode::Grab => perform_dragging(state, mouse_pos)
     }
-}
+} 
