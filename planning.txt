@@ -14,3 +14,17 @@ set it up for wasm
 
 Notes / Bugs:
 - when not in full screen its 60fps rather than 120
+- grab currently doesn't mean anything because the canvas is not infinite
+
+What to do Next:
+- when you click there should be a dot
+- switch the drawing to mesh based rendering for efficientcy
+- set this porject up for webassembly
+- separate the lines on the mesh into objects (one continuous stroke. What about if seperated)
+- make a spot eraser and an object eraser
+- add back in the dots and the zooming
+- 
+
+The Paper Effect:
+the texture goes on after the drawing and is likely a shader
+    that can go ontop of whatever

@@ -1,6 +1,6 @@
 use macroquad::prelude::*;
 
-use crate::mode_selector::Mode;
+use super::mode_selector::Mode;
 
 pub fn draw_cursor_based_on_mode(mode: &Mode, mouse_pos: Vec2) {
     match mode {

@@ -1,6 +1,6 @@
 use macroquad::prelude::*;
 
-use crate::{mode_selector::Mode, state::ApplicationState};
+use super::{mode_selector::Mode, ApplicationState};
 
 pub fn draw_button(text: &str, x: f32, y: f32, width: f32, height: f32, is_active: bool) -> bool {
     let color = if is_active { DARKGRAY } else { GRAY };

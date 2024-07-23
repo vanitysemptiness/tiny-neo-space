@@ -1,6 +1,6 @@
 use macroquad::prelude::*;
 
-use crate::state::ApplicationState;
+use super::state::ApplicationState;
 
 pub fn segment_distance(start: Vec2, end: Vec2, point: Vec2) -> f32 {
     let line_vec = end - start;

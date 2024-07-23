@@ -1,7 +1,7 @@
-use macroquad::{input::{is_mouse_button_down, is_mouse_button_pressed, MouseButton}, math::Vec2, prelude};
+use macroquad::{input::{is_mouse_button_down, is_mouse_button_pressed, MouseButton}, math::Vec2};
 
-use crate::state::ApplicationState;
-use crate::drawing::segment_distance;
+use super::state::ApplicationState;
+use super::drawing::segment_distance;
 
 #[derive(PartialEq)]
 pub(crate) enum Mode {

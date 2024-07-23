@@ -22,6 +22,7 @@ WASM
 ```bash
 rustup target add wasm32-unknown-unknown
 cargo build --target wasm32-unknown-unknown
+wasm-pack build --target web
 ```
 
 Running a Local Server for Testing

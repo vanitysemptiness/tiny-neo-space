@@ -1,6 +1,6 @@
 use macroquad::prelude::*;
 
-use crate::mode_selector::Mode;
+use super::mode_selector::Mode;
 
 pub struct ApplicationState {
    pub mode: Mode,
