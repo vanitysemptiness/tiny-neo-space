@@ -5,6 +5,7 @@ mod drawing;
 mod hud;
 mod mode_selector;
 mod state;
+mod dragging;
 
 use macroquad::prelude::*;
 
