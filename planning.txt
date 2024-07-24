@@ -15,6 +15,7 @@ set it up for wasm
 Notes / Bugs:
 - when not in full screen its 60fps rather than 120
 - grab currently doesn't mean anything because the canvas is not infinite
+- you can draw over the buttons
 
 What to do Next:
 - when you click there should be a dot
