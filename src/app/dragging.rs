@@ -1,6 +1,6 @@
 use macroquad::{input::{is_mouse_button_pressed, MouseButton}, math::Vec2};
 
-use super::{drawing::segment_distance, ApplicationState};
+use super::{ ApplicationState};
 
 
 

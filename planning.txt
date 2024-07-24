@@ -24,8 +24,15 @@ What to do Next:
 - separate the lines on the mesh into objects (one continuous stroke. What about if seperated)
 - make a spot eraser and an object eraser
 - add back in the dots and the zooming
-- 
+
+Efficient Rendering:
+- collect lines that need to be rendered into a VBO and an index buffer
+- update the VBO with the current positions of the lines
+- render the mesh in a single draw call
+- minimize state changes 
 
 The Paper Effect:
 the texture goes on after the drawing and is likely a shader
     that can go ontop of whatever
+
+

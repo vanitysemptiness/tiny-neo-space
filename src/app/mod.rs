@@ -6,6 +6,7 @@ mod hud;
 mod mode_selector;
 mod state;
 mod dragging;
+mod screen_object;
 
 use macroquad::prelude::*;
 
@@ -24,7 +25,7 @@ pub async fn run() {
 
         let mouse_pos = Vec2::from(mouse_position());
         mode_selector::perform_action_based_on_application_state(&mut state, &mouse_pos);
-        drawing::render_strokes(&state);
+        drawing::render_strokes(&mut state);
         cursor::draw_cursor_based_on_mode(&state.mode, mouse_pos);
 
         hud.draw();

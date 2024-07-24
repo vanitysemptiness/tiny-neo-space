@@ -1,79 +1,91 @@
 use macroquad::prelude::*;
+use super::state::ApplicationState;
+use super::screen_object::Stroke;
 
-use super::state::{ApplicationState, Stroke};
-
-pub fn segment_distance(start: Vec2, end: Vec2, point: Vec2) -> f32 {
-    let line_vec = end - start;
-    let point_vec = point - start;
-    let line_len = line_vec.length();
-    let project = point_vec.dot(line_vec) / line_len;
-    if project < 0.0 {
-        point_vec.length()
-    } else if project > line_len {
-        (point - end).length()
-    } else {
-        let projection = start + line_vec * (project / line_len);
-        (point - projection).length()
-    }
-}
-
-pub fn render_drawings(state: &ApplicationState) {
-    todo!() // no longer drawing lines as clusters of lines
-    // for (i, &(start, end)) in state.lines.iter().enumerate() {
-    //     let color = if Some(i) == state.highlighted { RED } else { BLUE };
-    //     draw_line(start.x, start.y, end.x, end.y, 2.0, color);
-    // }
-}
+const MIN_DISTANCE_BETWEEN_POINTS: f32 = 2.0;
+const MAX_POINTS_PER_STROKE: usize = 1000;
 
 pub fn perform_drawing(state: &mut ApplicationState, mouse_pos: &Vec2) {
     if is_mouse_button_down(MouseButton::Left) {
-        if let Some(stroke) = &mut state.current_stroke {
-            stroke.points.push(mouse_pos.clone());
-        } else {
-            state.current_stroke = Some(Stroke {
-                points: vec![mouse_pos.clone()],
-                fickness: state.cursor_size,
-            });
-        }
-    } else if is_mouse_button_released(MouseButton::Left) {
-        if let Some(stroke) = state.current_stroke.take() {
-            if stroke.points.len() > 1 {
-                state.strokes.push(stroke);
+        let new_point = simplify_point(state, mouse_pos);
+        
+        if let Some(point) = new_point {
+            if let Some(stroke) = &mut state.current_stroke {
+                stroke.points.push(point);
+                if stroke.points.len() >= MAX_POINTS_PER_STROKE {
+                    finalize_current_stroke(state);
+                    state.current_stroke = Some(Stroke {
+                        points: vec![point],
+                        fickness: state.cursor_size,
+                        color: BLUE,
+                    });
+                }
             } else {
-                // For a single point, create a small circle
-                state.strokes.push(Stroke {
-                    points: vec![mouse_pos.clone(), mouse_pos.clone()],
+                state.current_stroke = Some(Stroke {
+                    points: vec![point],
                     fickness: state.cursor_size,
+                    color: BLUE,
                 });
             }
+        }
+    } else if is_mouse_button_released(MouseButton::Left) {
+        finalize_current_stroke(state);
+    }
+}
+
+fn simplify_point(state: &ApplicationState, mouse_pos: &Vec2) -> Option<Vec2> {
+    if let Some(stroke) = &state.current_stroke {
+        if let Some(last_point) = stroke.points.last() {
+            if last_point.distance(*mouse_pos) >= MIN_DISTANCE_BETWEEN_POINTS {
+                Some(*mouse_pos)
+            } else {
+                None
+            }
+        } else {
+            Some(*mouse_pos)
+        }
+    } else {
+        Some(*mouse_pos)
+    }
+}
+
+fn finalize_current_stroke(state: &mut ApplicationState) {
+    if let Some(stroke) = state.current_stroke.take() {
+        if stroke.points.len() > 1 {
+            state.strokes.push(stroke);
         }
     }
 }
 
 pub fn render_strokes(state: &ApplicationState) {
-    for (i, stroke) in state.strokes.iter().enumerate() {
-        let color = if Some(i) == state.highlighted { RED } else { BLUE };
-        render_stroke(stroke, color);
+    for stroke in &state.strokes {
+        render_stroke(stroke);
     }
-    
+
     if let Some(current_stroke) = &state.current_stroke {
-        render_stroke(current_stroke, BLUE);
+        render_stroke(current_stroke);
     }
 }
 
-fn render_stroke(stroke: &Stroke, color: Color) {
-    if stroke.points.len() == 1 {
-        // Draw a circle for a single point
-        draw_circle(stroke.points[0].x, stroke.points[0].y, stroke.fickness / 2.0, color);
-    } else {
-        for window in stroke.points.windows(2) {
-            let start = window[0];
-            let end = window[1];
-            draw_line(start.x, start.y, end.x, end.y, stroke.fickness, color);
+fn render_stroke(stroke: &Stroke) {
+    if stroke.points.len() < 2 {
+        return;
+    }
+
+    let mut previous_point: Option<Vec2> = None;
+    for (i, point) in stroke.points.iter().enumerate() {
+        if let Some(prev) = previous_point {
+            // Draw thick line
+            draw_line(prev.x, prev.y, point.x, point.y, stroke.fickness, stroke.color);
             
-            // Draw circles at the joints to smooth out the connections
-            draw_circle(start.x, start.y, stroke.fickness / 2.0, color);
-            draw_circle(end.x, end.y, stroke.fickness / 2.0, color);
+            // Draw circle at the start point (only for the first segment)
+            if i == 1 {
+                draw_circle(prev.x, prev.y, stroke.fickness / 2.0, stroke.color);
+            }
+            
+            // Draw circle at the end point
+            draw_circle(point.x, point.y, stroke.fickness / 2.0, stroke.color);
         }
+        previous_point = Some(*point);
     }
 }
